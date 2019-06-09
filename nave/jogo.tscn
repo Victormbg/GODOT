@@ -1,0 +1,52 @@
+[gd_scene load_steps=3 format=1]
+
+[ext_resource path="res://nave.jpg" type="Texture" id=1]
+
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends KinematicBody2D
+var rotacao = 0
+
+func _ready():
+	set_fixed_process(true)
+
+func _fixed_process(delta):
+	#Inputs
+	var tc_direita = Input.is_action_pressed(\"ui_right\")
+	var tc_esquerda = Input.is_action_pressed(\"ui_left\")
+	var tc_cima = Input.is_action_pressed(\"ui_up\")
+
+	#Rotacao
+	if tc_esquerda:
+		rotacao += 1
+	if tc_direita:
+		rotacao -= 1
+
+	#Avanco
+	if tc_cima:
+		var xx = cos(rotacao * PI / 180)
+		var yy = -sin(rotacao * PI / 180)
+		var direcao = Vector2( xx, yy)
+
+		apply_impulse( get_pos(), direcao )
+
+	set_rotd(rotacao)"
+
+[node name="jogo" type="Node"]
+
+[node name="KinematicBody2D" type="KinematicBody2D" parent="."]
+
+transform/pos = Vector2( 483.881, 300.841 )
+input/pickable = false
+collision/layers = 1
+collision/mask = 1
+collision/margin = 0.08
+script/script = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="KinematicBody2D"]
+
+transform/pos = Vector2( -40.4484, -62.5595 )
+transform/scale = Vector2( 0.443839, 0.323124 )
+texture = ExtResource( 1 )
+
+
